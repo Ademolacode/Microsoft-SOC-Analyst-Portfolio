@@ -289,6 +289,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-*Last Updated: December 2024*  
-*Challenge Start Date: [Your start date]*  
-*Challenge Completion Date: [Your completion date]*
+*Last Updated: December 2025*  
+*Challenge Start Date: [My start date]*  
+*Challenge Completion Date: [My completion date]*
