@@ -66,3 +66,12 @@ Screenshots are stored in the `screenshots/` folder.
 ├── kql/
 ├── artifacts/
 └── screenshots/
+
+```
+## 🚧 What I Would Improve Next
+
+Tune policies for newly registered domains
+
+Expand detection for executive impersonation attempts
+
+Automate enrichment steps for phishing investigations
