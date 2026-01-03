@@ -74,6 +74,7 @@ This is intentionally written as a **portfolio**, not a day-by-day lab journal.
 
 **Focus:** Establishing visibility and architecture.
 **Outcome:** Sentinel workspace with validated ingestion, dashboards, and initial detections.
+
 **Concrete Result:** Created 2 dashboards and wrote 4 authentication-focused KQL queries.
 
 **What I Learned:**
@@ -87,6 +88,7 @@ Visibility is not automatic. I learned how to configure data connectors correctl
 
 **Focus:** Defensive policy configuration and email forensics.
 **Outcome:** Investigated a credential harvesting attempt and documented the response.
+
 **Concrete Result:** Produced 1 phishing incident report with headers, URL analysis, and recommendations.
 
 **What I Learned:**
@@ -100,6 +102,7 @@ How Safe Links affects time-of-click protection and why detection alone is not e
 
 **Focus:** Endpoint telemetry, detection validation, and hunting.
 **Outcome:** Investigated an endpoint alert generated from controlled adversary simulation.
+
 **Concrete Result:** Validated ASR rule enforcement and wrote 1 endpoint incident report.
 
 **What I Learned:**
@@ -113,6 +116,7 @@ How Defender for Endpoint correlates process, registry, and timeline data, and h
 
 **Focus:** End-to-end SOC investigation across email, identity, and endpoint.
 **Outcome:** Full kill-chain reconstruction with unified KQL correlation.
+
 **Concrete Result:** Delivered 1 final SOC-style incident report with timeline and response actions.
 
 **What I Learned:**
