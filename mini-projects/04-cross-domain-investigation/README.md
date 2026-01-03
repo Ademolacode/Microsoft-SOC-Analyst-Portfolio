@@ -70,7 +70,7 @@ Screenshots are stored in the `screenshots/` folder.
 └── screenshots/
   ```
 
-##🚧 What I Would Improve Next
+## 🚧 What I Would Improve Next
 
 Automate response actions using Sentinel playbooks
 
