@@ -74,3 +74,14 @@ Screenshots are stored in the `screenshots/` directory and referenced where appl
 ├── dashboards/
 ├── screenshots/
 └── notes.md
+```
+
+## 🚧 Reflection and Improvements
+
+If extended further, this project could be improved by:
+
+Expanding detections beyond authentication-focused events
+
+Establishing longer baseline periods to better define normal behavior
+
+Enriching authentication data with user role and geographic context
