@@ -1,79 +1,122 @@
-## 🖥️ Mini Project #3: Endpoint Detection & Response
+## 🖥️ Mini Project #3: Endpoint Detection and Response
 
-**Focus Area:** Endpoint telemetry and control validation  
-**Tools Used:** Microsoft Defender for Endpoint, Intune, Atomic Red Team, KQL
+**Focus:** Endpoint telemetry and security control validation.  
+**Tools:** Defender for Endpoint, Intune, Atomic Red Team, KQL.  
+**Duration:** Days 17–23.
 
 ---
 
 ## 🎯 Objective
 
-Investigate an endpoint alert generated from controlled adversary simulation and validate endpoint security controls using Defender for Endpoint and Intune.
+Validate endpoint security controls by simulating adversary techniques and investigating generated alerts using structured SOC investigation workflows.
+
+This project focuses on understanding how endpoint telemetry is generated, correlated, and used to confirm whether malicious activity was blocked or successful.
 
 ---
 
-## 🧠 What I Learned
+## 🛠️ Work Performed
 
-- Endpoint telemetry provides deep visibility when interpreted correctly
-- ASR rules must be validated, not assumed effective
-- Device timelines help reconstruct attacker behavior
-- Hypothesis-driven hunting exposes detection gaps
+### Endpoint Configuration
+- Onboarded a Windows 11 test VM into Defender for Endpoint.
+- Configured Attack Surface Reduction rules via Intune.
+- Validated telemetry ingestion and policy enforcement in the MDE portal.
 
----
+### Adversary Simulation
+- Executed controlled Atomic Red Team techniques:
+  - **T1059.001** – PowerShell execution.
+  - **T1547.001** – Registry Run Keys persistence.
+- Generated alerts for investigation and validation.
 
-## 🛠️ Key Tasks Performed
-
-- Onboarded Windows 11 VM to Defender for Endpoint
-- Configured Attack Surface Reduction rules via Intune
-- Executed Atomic Red Team techniques
-- Investigated alerts using the device timeline
-- Wrote hunting queries to pivot on suspicious behavior
-
----
-
-## 📊 Concrete Outcomes
-
-- Generated and investigated **1 endpoint alert**
-- Validated **ASR rule block event** in logs
-- Executed **2 Atomic Red Team techniques**
-- Produced **1 endpoint incident report**
+### Investigation
+- Analyzed alerts in Defender for Endpoint.
+- Reviewed device timeline for process creation, registry modification, and network activity.
+- Confirmed ASR rules blocked malicious behavior.
+- Documented findings in a SOC-style incident report.
 
 ---
 
-## 🔍 Investigation Summary
+## 📋 Investigation Summary
 
-A registry-based persistence technique was detected during controlled testing.  
-ASR rules triggered as expected, and no lateral movement was observed.
+A suspicious PowerShell execution alert was generated during controlled testing. Analysis revealed an encoded PowerShell command attempting to establish registry-based persistence via a Run key.
+
+Attack Surface Reduction rules blocked the activity before persistence was established. Device timeline analysis confirmed no payload execution, no lateral movement, and no additional impacted hosts.
+
+---
+
+## 🧠 Key Findings
+
+- Encoded PowerShell commands are a high-fidelity indicator of malicious activity.
+- Registry-only persistence attempts can occur without file drops.
+- ASR rules must be validated through telemetry, not assumed effective.
+- Device timelines are critical for reconstructing attacker behavior.
 
 ---
 
-## 📸 Evidence & Screenshots
+## 🔍 Representative KQL Queries
 
-Included screenshots:
-- MDE alert details
-- Device timeline
-- ASR policy configuration
-- Atomic test execution
+### Encoded PowerShell Detection
+```kql
+DeviceProcessEvents
+| where TimeGenerated > ago(7d)
+| where FileName =~ "powershell.exe"
+| where ProcessCommandLine has_any ("-enc", "-encodedcommand", "frombase64string")
+| project TimeGenerated, DeviceName, AccountName, ProcessCommandLine
+| order by TimeGenerated desc
+```
 
-Screenshots are stored in the `screenshots/` folder.
+```kql
+Registry Persistence Hunting
+DeviceRegistryEvents
+| where TimeGenerated > ago(7d)
+| where RegistryKey has "CurrentVersion\\Run"
+| where ActionType == "RegistryValueSet"
+| project TimeGenerated, DeviceName, RegistryKey, RegistryValueName, RegistryValueData
+```
 
----
+## 📊 Results
+| Metric                | Outcome                                        |
+| --------------------- | ---------------------------------------------- |
+| Alerts Investigated   | 1 medium-severity endpoint alert.              |
+| ASR Rules Validated   | 2 rules confirmed blocking malicious activity. |
+| Atomic Tests Executed | 2 adversary techniques.                        |
+| Incident Reports      | 1 endpoint investigation completed.            |
+| User Impact           | None.                                          |
+
+
+##  📸 Evidence and Artifacts
+
+Artifacts include:
+
+Defender for Endpoint alert details.
+
+Device timeline showing process and registry activity.
+
+Intune ASR policy configuration.
+
+Atomic Red Team execution output.
+
+Screenshots and supporting files are stored in the screenshots/ and atomic-tests/ directories.
+
+##  🚧 Improvements Identified
+
+Expand hunting for lateral movement techniques such as PsExec, WMI, and RDP.
+
+Test evasion techniques using obfuscated PowerShell.
+
+Automate enrichment of process hashes during investigations.
+
+Baseline legitimate PowerShell usage to reduce false positives.
+
+Practice endpoint isolation and evidence collection workflows.
 
 ## 📂 Project Structure
-
-```text
+```
 03-endpoint-detection/
 ├── README.md
 ├── investigation-report.md
 ├── kql/
-
-```
-
-## 🚧 What I Would Improve Next
-
-Expand hunting beyond persistence techniques
-
-Add detection for payload execution attempts
-
-Automate alert enrichment workflows
+│   └── endpoint-hunting-queries.kql
 ├── atomic-tests/
+│   ├── T1059.001-powershell.txt
+│   └── T1547.001-registry-run-keys.txt
 └── screenshots/
