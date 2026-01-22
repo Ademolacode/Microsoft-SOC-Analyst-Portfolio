@@ -1,87 +1,131 @@
 ## 📧 Mini Project #2: Email Security and Phishing Investigation
 
-**Focus Area:** Email security and phishing response  
-**Tools Used:** Defender for Office 365, Threat Explorer, KQL  
+**Focus:** Email threat detection and investigation.  
+**Tools:** Defender for Office 365, Threat Explorer, KQL.  
+**Duration:** Days 10–16.
 
 ---
 
 ## 🎯 Objective
 
-Configure email security controls and investigate a simulated phishing attempt to demonstrate how email-based threats are detected, analyzed, and documented in a SOC environment.
+Configure email security controls, simulate a phishing attack, and document a complete SOC-style investigation from detection through remediation.
 
 ---
 
-## 🧠 Skills and Concepts Demonstrated
+## 🛠️ Work Performed
 
-- Safe Links protection operates at time of click rather than delivery
-- Automated verdicts require analyst validation and context
-- Header and URL analysis provide critical attribution signals
-- Clear investigation workflows are as important as technical controls
+### Email Security Configuration
+- Safe Links for time-of-click URL protection.
+- Anti-Phishing policies for impersonation detection.
+- Quarantine policies for high-confidence phishing messages.
 
----
-
-## 🛠️ Investigation Workflow
-
-- Configured Safe Links and Anti-Phishing policies in Defender for Office 365
-- Delivered a controlled phishing-style email to a test mailbox
-- Identified the message in Threat Explorer
-- Analyzed email headers including SPF, DKIM, and DMARC results
-- Reviewed Safe Links detonation and URL redirection behavior
-- Documented indicators and findings using a SOC-style report format
+### Phishing Simulation
+- Delivered a credential harvesting email to a test mailbox.
+- Monitored detection and enforcement using Threat Explorer.
+- Analyzed email headers and embedded URLs.
+- Validated Safe Links blocked access to the phishing page.
 
 ---
 
-## 📊 Concrete Outcomes
+## 📋 Investigation Report Summary
 
-- Produced **one complete phishing incident report**
-- Investigated **one credential harvesting scenario**
-- Validated Safe Links enforcement at time of click
-- Documented sender, URL, and header-based indicators
+### Findings
+- **Date/Time:** 2025-01-15 09:47:32 UTC.  
+- **Recipient:** testuser@labdomain.onmicrosoft.com.  
+- **Sender:** security-alert@phishing-test[.]com.  
+- **Subject:** “Urgent: Verify Your Account”.  
+- **Malicious URL:** hxxps://fake-login-page[.]com/verify.  
+- **Verdict:** Phishing, high confidence.  
+- **Action Taken:** Automatically quarantined.
 
----
+### Investigation Summary
+A phishing email impersonating an internal security notification was delivered to a test mailbox. Header analysis showed SPF and DKIM authentication failures, and the sender domain had been registered three days prior. Safe Links blocked the credential harvesting page at time of click. No user interaction occurred, and no credentials were compromised.
 
-## 🔍 Investigation Summary
-
-A phishing email impersonating an internal security notification was delivered to a test mailbox. The message contained a malicious URL designed to harvest user credentials through a fake login page.
-
-The sender domain failed SPF and DKIM authentication and was identified as a newly registered domain, increasing confidence in the phishing verdict. Safe Links blocked access to the malicious URL at time of click, and the message was automatically quarantined by anti-phishing policies.
-
-No user interaction occurred, and no credentials were compromised.
-
----
-
-## 🧾 Key Findings
-
-- **Date and Time:** 2025-01-15 09:47:32 UTC  
-- **Recipient:** testuser@labdomain.onmicrosoft.com  
-- **Sender:** security-alert@phishing-test[.]com  
-- **Subject:** “Urgent: Verify Your Account”  
-- **Malicious URL:** hxxps://fake-login-page[.]com/verify  
-- **Verdict:** Phishing (High Confidence)  
-- **Action Taken:** Automatically quarantined, URL blocked by Safe Links  
+### Who, What, When, Where, Why, How
+- **Who:** Test user mailbox.  
+- **What:** Credential harvesting phishing email.  
+- **When:** 2025-01-15 09:47:32 UTC.  
+- **Where:** Microsoft 365 test environment.  
+- **Why:** Simulated attack to validate email security controls.  
+- **How:** Email bypassed initial spam filtering but was blocked by Safe Links and Anti-Phishing enforcement.
 
 ---
 
-## 🔎 Who, What, When, Where, Why, How
+## 🛡️ Recommendations
 
-**Who**  
-A test user mailbox and an external sender impersonating an internal security notification.
-
-**What**  
-A phishing email containing a credential harvesting link.
-
-**When**  
-January 15, 2025 at 09:47:32 UTC. The activity is no longer ongoing.
-
-**Where**  
-Microsoft 365 email environment protected by Defender for Office 365.
-
-**Why**  
-The attacker’s objective was credential harvesting through social engineering.
-
-**How**  
-The email bypassed initial delivery filtering but was detected and blocked by Safe Links and anti-phishing policies during analysis and at time of click.
+- Confirm Safe Links and Anti-Phishing policies apply to all mailboxes.
+- Block the sender domain `phishing-test[.]com` at the tenant level.
+- Create detection rules for urgent account verification themes from external senders.
+- Prevent users from self-releasing quarantined phishing messages.
+- Use this incident as an example for phishing awareness training.
 
 ---
+
+## 🔍 KQL Queries Used
+
+### Phishing Email Detection
+```kql
+EmailEvents
+| where TimeGenerated > ago(7d)
+| where ThreatTypes has "Phish"
+| project TimeGenerated, SenderFromAddress, RecipientEmailAddress, Subject, DeliveryAction
+| order by TimeGenerated desc
+
+Safe Links Block Events
+UrlClickEvents
+| where TimeGenerated > ago(7d)
+| where ActionType == "ClickBlocked"
+| project TimeGenerated, AccountUpn, Url, UrlChain
+
+Quarantined Messages by Sender
+EmailEvents
+| where DeliveryAction == "Quarantined"
+| summarize Count = count() by SenderFromAddress
+| order by Count desc
+
+```
+
+| Metric             | Outcome                                |
+| ------------------ | -------------------------------------- |
+| Incident Reports   | 1 phishing investigation completed.    |
+| Policies Validated | Safe Links, Anti-Phishing, Quarantine. |
+| Threats Blocked    | 1 credential harvesting attempt.       |
+| User Impact        | None.                                  |
+
+
+## 🧠 Key Learnings
+
+Safe Links enforcement occurs at time of click, not delivery.
+
+SPF, DKIM, and DMARC failures are strong phishing indicators.
+
+Threat Explorer data may take 15–30 minutes to populate.
+
+Clear documentation improves investigation handoff and communication.
+
+## 🚧 Improvements Identified
+
+Add detection for newly registered domains under seven days old.
+
+Automate URL and domain enrichment during investigations.
+
+Validate user-reported phishing workflows.
+
+Develop a standardized phishing response playbook.
+
+---
+
+## 📂 Project Structure
+
+02-email-security/
+├── README.md
+├── investigation-report.md
+├── kql/
+│   └── email-threat-queries.kql
+├── artifacts/
+│   ├── email-headers.txt
+│   └── iocs.txt
+└── screenshots/
+
 
 
