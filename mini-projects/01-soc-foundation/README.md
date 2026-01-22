@@ -1,54 +1,67 @@
-## 🏗️ Mini Project #1: SOC Foundation & Lab Blueprint
+## 🏗️ Mini Project #1: SOC Foundation and Lab Blueprint.
 
-**Focus Area:** SIEM foundations and visibility  
-**Tools Used:** Microsoft Sentinel, Azure Monitor, KQL
+**Focus Area:** SIEM Deployment, Data Ingestion, and Operational Visibility.
+
+**Tools Used:** :Microsoft Sentinel, Azure Monitor, On-Prem Virtual Machine, KQL.
 
 ---
 
 ## 🎯 Objective
 
-Establish foundational SOC visibility by deploying Microsoft Sentinel, validating log ingestion, and building dashboards that support authentication triage and baseline analysis.
+Deploy Microsoft Sentinel, establish log ingestion from a test VM, and create dashboards for authentication monitoring.
 
-This project focuses on making security data usable and structured, not just available.
-
----
-
-## 🧠 What I Learned
-
-- Visibility requires deliberate configuration, not default settings
-- Data connectors must be validated before relying on detections
-- Naming conventions and structure prevent investigation confusion
-- Dashboards provide context and baselines, not alerts
+This project focuses on making security data structured, reliable, and investigation-ready rather than simply available.
 
 ---
 
-## 🛠️ Key Tasks Performed
+## 🧠 Skills and Concepts Demonstrated
 
-- Deployed Microsoft Sentinel workspace
-- Connected and validated authentication log sources
-- Wrote KQL queries to identify failed authentication patterns
-- Built dashboards for authentication baselining
-- Bookmarked notable events for investigation
+- Visibility requires deliberate configuration rather than default settings
+- Data connectors must be validated before detections can be trusted
+- Consistent naming and structure reduce investigation friction
+- Dashboards provide baseline context and trends, not alerts
+
+---
+
+## 🛠️ Tasks Performed
+
+- Deployed and configured a Microsoft Sentinel workspace
+- Connected authentication-related log sources and validated ingestion
+- Developed KQL queries to identify failed authentication patterns
+- Built dashboards to baseline authentication behavior
+- Bookmarked notable events to support future investigations
 
 ---
 
 ## 📊 Concrete Outcomes
 
-- Created **2 Sentinel dashboards**
-- Wrote **4 authentication-focused KQL queries**
-- Validated ingestion from **1 primary log source**
-- Documented SOC lab blueprint and structure
+- Created **2 Sentinel dashboards** focused on authentication visibility
+- Wrote **4 KQL queries** targeting failed logons and suspicious patterns
+- Validated ingestion from **one primary authentication log source**
+- Documented the SOC lab architecture and data flow as a blueprint
 
 ---
 
-## 📸 Evidence & Screenshots
+## 🔎 Technical Validation 
 
-Included screenshots:
+To ensure the environment was investigation-ready, I validated both **data quality and query performance**:
+
+- Confirmed authentication events were consistently ingested and time-aligned
+- Optimized baseline queries using time filters and aggregation
+- Reduced authentication query runtime from **~18 seconds to under 2 seconds** on a 7-day lookback
+
+This ensured dashboards and investigations remained responsive as data volume increased.
+
+---
+
+## 📸 Evidence and Artifacts
+
+Artifacts included in this project:
 - Sentinel workspace overview
-- Authentication dashboard
-- KQL query with results
+- Authentication baseline dashboard
+- KQL query execution with results
 
-Screenshots are stored in the `screenshots/` folder.
+Screenshots are stored in the `screenshots/` directory and referenced where applicable.
 
 ---
 
@@ -61,12 +74,3 @@ Screenshots are stored in the `screenshots/` folder.
 ├── dashboards/
 ├── screenshots/
 └── notes.md
-```
-
-## 🚧 What I Would Improve Next
-
-Expand detections beyond authentication events
-
-Establish longer baselines for normal behavior
-
-Add enrichment context such as user roles and geography
