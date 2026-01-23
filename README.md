@@ -28,7 +28,6 @@
 - [Repository Overview](#repository-overview)
 - [Skills Demonstrated](#skills-demonstrated)
 - [Repository Structure](#repository-structure)
-- [Closing Notes](#closing-notes)
 
 ---
 
