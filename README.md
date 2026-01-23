@@ -25,7 +25,6 @@
   - [Mini Project #2: Email Security and Phishing Investigation](#-mini-project-2-email-security-and-phishing-investigation)
   - [Mini Project #3: Endpoint Detection and Response](#-mini-project-3-endpoint-detection-and-response)
   - [Mini Project #4: Cross-Domain Incident Investigation (Capstone)](#-mini-project-4-cross-domain-incident-investigation-capstone)
-- [Measurable Outcomes](#measurable-outcomes)
 - [Repository Overview](#repository-overview)
 - [Skills Demonstrated](#skills-demonstrated)
 - [Repository Structure](#repository-structure)
@@ -152,19 +151,6 @@ All investigations followed a consistent SOC methodology.
 - Reconstructed full attack timeline using KQL.  
 - Evaluated multiple investigative hypotheses.  
 - Delivered a Tier 2-style incident report with remediation guidance.  
-
----
-
-## Measurable Outcomes
-
-| Area | Result |
-|----|-------|
-| Incident Reports | 4 SOC-style investigations. |
-| KQL Queries | 10+ detection and hunting queries. |
-| Dashboards | 3 operational Sentinel workbooks. |
-| Alerts Investigated | 8+ across multiple domains. |
-| MITRE Techniques | 25+ identified and mapped. |
-| Response Actions | Account disablement, isolation, policy validation. |
 
 ---
 
