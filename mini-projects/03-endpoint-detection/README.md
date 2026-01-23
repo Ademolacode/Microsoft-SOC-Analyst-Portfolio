@@ -9,7 +9,6 @@
 ## 🎯 Objective
 
 Validate endpoint security controls by simulating adversary techniques and investigating generated alerts using structured SOC investigation workflows.
-
 This project focuses on understanding how endpoint telemetry is generated, correlated, and used to confirm whether malicious activity was blocked or successful.
 
 ---
@@ -21,57 +20,25 @@ This project focuses on understanding how endpoint telemetry is generated, corre
 - Configured Attack Surface Reduction rules via Intune.
 - Validated telemetry ingestion and policy enforcement in the MDE portal.
 
-### Adversary Simulation
+### Adversary Simulation and Investigation
 - Executed controlled Atomic Red Team techniques:
   - **T1059.001** – PowerShell execution.
   - **T1547.001** – Registry Run Keys persistence.
 - Generated alerts for investigation and validation.
-
-### Investigation
 - Analyzed alerts in Defender for Endpoint.
 - Reviewed device timeline for process creation, registry modification, and network activity.
 - Confirmed ASR rules blocked malicious behavior.
-- Documented findings in a SOC-style incident report.
+- Documented findings in an endpoint-focused investigation report.
 
 ---
 
 ## 📋 Investigation Summary
 
 A suspicious PowerShell execution alert was generated during controlled testing. Analysis revealed an encoded PowerShell command attempting to establish registry-based persistence via a Run key.
-
-Attack Surface Reduction rules blocked the activity before persistence was established. Device timeline analysis confirmed no payload execution, no lateral movement, and no additional impacted hosts.
-
----
-
-## 🧠 Key Findings
-
-- Encoded PowerShell commands are a high-fidelity indicator of malicious activity.
-- Registry-only persistence attempts can occur without file drops.
-- ASR rules must be validated through telemetry, not assumed effective.
-- Device timelines are critical for reconstructing attacker behavior.
+Attack Surface Reduction rules blocked the activity before persistence was established. Device timeline analysis confirmed no payload execution, no lateral movement, and no additional impacted hosts. Full analysis is documented in investigation-report.md.
 
 ---
 
-## 🔍 Representative KQL Queries
-
-### Encoded PowerShell Detection
-```kql
-DeviceProcessEvents
-| where TimeGenerated > ago(7d)
-| where FileName =~ "powershell.exe"
-| where ProcessCommandLine has_any ("-enc", "-encodedcommand", "frombase64string")
-| project TimeGenerated, DeviceName, AccountName, ProcessCommandLine
-| order by TimeGenerated desc
-```
-
-```kql
-Registry Persistence Hunting
-DeviceRegistryEvents
-| where TimeGenerated > ago(7d)
-| where RegistryKey has "CurrentVersion\\Run"
-| where ActionType == "RegistryValueSet"
-| project TimeGenerated, DeviceName, RegistryKey, RegistryValueName, RegistryValueData
-```
 
 ## 📊 Results
 | Metric                | Outcome                                        |
@@ -83,31 +50,29 @@ DeviceRegistryEvents
 | User Impact           | None.                                          |
 
 
-##  📸 Evidence and Artifacts
-
-Artifacts include:
-
-Defender for Endpoint alert details.
-
-Device timeline showing process and registry activity.
-
-Intune ASR policy configuration.
-
-Atomic Red Team execution output.
-
+##  📸 Screenshots
+Screenshots include:
+- Defender for Endpoint alert details.
+- Device timeline showing process and registry activity.
+- Intune ASR policy configuration.
+- Atomic Red Team execution output.
 Screenshots and supporting files are stored in the screenshots/ and atomic-tests/ directories.
+
+## 🧠 Key Findings
+
+- Encoded PowerShell commands are a high-fidelity indicator of malicious activity.
+- Registry-only persistence attempts can occur without file drops.
+- ASR rules must be validated through telemetry, not assumed effective.
+- Device timelines are critical for reconstructing attacker behavior.
 
 ##  🚧 Improvements Identified
 
-Expand hunting for lateral movement techniques such as PsExec, WMI, and RDP.
+- Expand hunting for lateral movement techniques such as PsExec, WMI, and RDP.
+- Test evasion techniques using obfuscated PowerShell.
+- Automate enrichment of process hashes during investigations.
+- Baseline legitimate PowerShell usage to reduce false positives.
+- Practice endpoint isolation and evidence collection workflows.
 
-Test evasion techniques using obfuscated PowerShell.
-
-Automate enrichment of process hashes during investigations.
-
-Baseline legitimate PowerShell usage to reduce false positives.
-
-Practice endpoint isolation and evidence collection workflows.
 
 ## 📂 Project Structure
 ```
