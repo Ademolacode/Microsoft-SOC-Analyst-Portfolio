@@ -78,6 +78,6 @@ Anti-phishing policies quarantined the message.
 - Use this incident as a phishing awareness training example for users.
 ---
 
-## Analyst Notes
+## Note
 
-Threat Explorer did not immediately display the message after delivery. Data became available approximately 20 minutes later, highlighting the importance of re-querying during active investigations.
+Threat Explorer did not immediately display the message after delivery. Data became available approximately 30 minutes later, highlighting the importance of re-querying during active investigations.
