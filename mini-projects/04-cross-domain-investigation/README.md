@@ -10,7 +10,7 @@
 
 Investigate a simulated multi-stage attack spanning email, identity, and endpoint activity.
 
-This capstone project focuses on correlating telemetry across security domains, reconstructing a complete attack timeline, and producing a professional SOC-style incident report.
+This capstone project focuses on correlating telemetry across security domains, reconstructing a complete attack timeline, and producing a professional SOC-style investigation report.
 
 ---
 
@@ -29,23 +29,24 @@ This capstone project focuses on correlating telemetry across security domains, 
 ### Attack Scenario Simulated
 - Phishing email delivered to a test user.
 - User interaction leading to credential exposure.
-- Risky sign-in from an anonymous network.
+- Risky sign-in from an external Ip Address.
 - Suspicious PowerShell execution on the endpoint.
 - Registry-based persistence attempt blocked by ASR rules.
 
 ### Correlation and Analysis
-- Unified email, identity, and endpoint logs in Microsoft Sentinel.
-- Built KQL queries to link activity across domains.
+- Correlated email, identity, and endpoint logs in Microsoft Sentinel.
+- Wrote KQL queries to link activity across domains.
 - Created a time-ordered incident timeline.
 - Validated whether activity represented a successful compromise or a disrupted attack chain.
+- Documented containment actions and prevention recommendations.
 
 ---
 
-## 📊 Concrete Outcomes
+## 📊 Outcomes
 
 - Investigated **one high-severity cross-domain incident**.
 - Correlated telemetry across **email, identity, and endpoint** sources.
-- Identified **five attack stages** within a 12-minute window.
+- Identified a **five attack stages** within a 12-minute window.
 - Mapped observed behavior to **multiple MITRE ATT&CK techniques**.
 - Documented containment actions and long-term hardening recommendations.
 
@@ -56,8 +57,7 @@ This capstone project focuses on correlating telemetry across security domains, 
 A phishing-based attack chain progressed from email delivery to identity risk signals and endpoint execution attempts.
 
 By correlating Defender for Office 365, Entra ID, and Defender for Endpoint telemetry in Sentinel, the full sequence of events was reconstructed. Endpoint and identity controls disrupted the attack before persistence or lateral movement could occur.
-
-The investigation highlighted identity telemetry as the critical link between initial access and endpoint activity.
+The investigation Full analysis is documented in final-incident-report.md.
 
 ---
 
@@ -71,15 +71,15 @@ The investigation highlighted identity telemetry as the critical link between in
 
 ---
 
-## 📸 Evidence and Artifacts
+## 📸 Screenshots
 
-Artifacts included in this project:
+Screenshots included in this project:
 - Sentinel incident graph and entity correlation.
 - Cross-domain KQL correlation queries.
 - Identity sign-in and risk detection logs.
 - Endpoint process and registry activity timelines.
 
-Screenshots and supporting evidence are stored in the `screenshots/` directory and referenced within the final incident report.
+Screenshots and supporting evidence are stored in the `screenshots/`
 
 ---
 
