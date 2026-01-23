@@ -66,7 +66,7 @@ A complete SOC-style investigation report is available in investigation-report.m
 ---
 
 ## 📂 Project Structure
-
+```text
 02-email-security/
 ├── README.md
 ├── investigation-report.md
