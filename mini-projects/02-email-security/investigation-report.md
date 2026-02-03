@@ -9,7 +9,7 @@
 - Recipient: david.books@CyberLetcode.onmicrosoft.com.
 - Sender Address: hr-notify@external-payroll[.]com.
 - Subject: Urgent Payroll Update Required.
-- Malicious URL: hxxps://secure-payroll-update[.]com/login.
+- Malicious URL: https://secure-payroll-update[.]com/login.
 - Verdict: Phishing (Credential Harvesting).
 - Action Taken: Message quarantined, URL blocked by Safe Links.
 - Product: Microsoft Defender for Office 365.
