@@ -1,17 +1,17 @@
-# Phase 3 — Endpoint Detection and Response
+# Phase 3 - Endpoint Detection and Response
 
 **Lab phase:** Endpoint Security  
 **Tool:** Microsoft Defender for Endpoint  
-**Tables:** `DeviceInfo`, `DeviceProcessEvents`, `DeviceFileEvents`, `DeviceRegistryEvents`, `DeviceNetworkEvents`, `DeviceEvents`  
+**Tables:** `DeviceInfo`, `DeviceProcessEvents`, `DeviceFileEvents`, `DeviceRegistryEvents`, `DeviceNetworkEvents`, `DeviceEvents.`  
 **Techniques:** T1059.001 (PowerShell), T1547.001 (Registry Run Keys), ASR rule validation
 
 These queries were built to investigate the `mydfir` test endpoint after onboarding it to Defender for Endpoint and running Atomic Red Team simulations.
 
-The most important lesson from this phase: endpoint telemetry is powerful but context-dependent. A PowerShell execution looks identical whether it belongs to a legitimate administrator or an attacker using stolen credentials. That ambiguity is the problem that the cross-domain queries in Phase 4 solve — and why endpoint analysis alone is never enough.
+The most important lesson from this phase: endpoint telemetry is powerful but context-dependent. A PowerShell execution looks identical whether it belongs to a legitimate administrator or an attacker using stolen credentials and that ambiguity is the problem that the cross-domain queries in Phase 4 solve — and why endpoint analysis alone is never enough.
 
 ---
 
-## Query 3.1 — Device Overview
+## Query 3.1 - Device Overview
 
 Run this immediately after onboarding any device. Check its risk level, onboarding status, and who is currently logged on before running any detections.
 
@@ -31,11 +31,11 @@ DeviceInfo
 | take 5
 ```
 
-**What I found:** The device already had a Medium risk classification when I checked it — 2 active alerts and 1 incident — before I had deliberately run any attack simulations. This was expected, because the device had been generating authentication telemetry in earlier phases that MDE had already classified as suspicious. Rather than dismissing this, I used it as a first investigation exercise and reviewed the device timeline immediately.
+**What I found:** The device already had a Medium risk classification when I checked it — 2 active alerts and 1 incident — before I had deliberately run any attack simulations. This was expected because the device had been generating authentication telemetry in earlier phases that MDE had already classified as suspicious. Rather than dismissing this, I used it as a first investigation exercise and reviewed the device timeline immediately.
 
 ---
 
-## Query 3.2 — Process Execution Timeline Baseline
+## Query 3.2 -  Process Execution Timeline Baseline
 
 Run this early in any endpoint investigation to understand what normal activity on this device looks like before narrowing to suspicious processes.
 
@@ -59,7 +59,7 @@ DeviceProcessEvents
 
 ---
 
-## Query 3.3 — PowerShell Execution with Evasion Flag Detection
+## Query 3.3 - PowerShell Execution with Evasion Flag Detection
 
 PowerShell is the most common attacker tool in Windows environments. This query finds all PowerShell executions and adds an `IsEncoded` flag for commands that show evasion indicators.
 
@@ -102,7 +102,7 @@ DeviceProcessEvents
 
 ---
 
-## Query 3.4 — Suspicious Parent-Child Process Relationships
+## Query 3.4 - Suspicious Parent-Child Process Relationships
 
 Office applications spawning shells, browsers spawning scripts, or anything unexpected launching PowerShell is a strong indicator of macro exploitation or drive-by compromise.
 
@@ -138,7 +138,7 @@ DeviceProcessEvents
 
 ---
 
-## Query 3.5 — Registry Run Key Modifications (Persistence Detection)
+## Query 3.5 - Registry Run Key Modifications (Persistence Detection)
 
 This is what T1547.001 tests. Attackers write to Run keys to survive reboots and maintain access. ASR rules blocked this in the lab — but this is the query that would catch it if ASR was disabled or not yet propagated.
 
@@ -168,11 +168,11 @@ DeviceRegistryEvents
 - Base64 encoded strings — long random-looking character sequences
 - PowerShell or cmd commands embedded directly
 
-Legitimate software almost never writes to Run keys from temp directories.
+Legitimate software rarely writes to Run keys from temp directories.
 
 ---
 
-## Query 3.6 — Files Created in Suspicious Locations
+## Query 3.6 - Files Created in Suspicious Locations
 
 Malware almost always stages files to temp or world-writable directories before executing. This query catches the drop step before execution happens.
 
@@ -211,7 +211,7 @@ DeviceFileEvents
 
 ---
 
-## Query 3.7 — Outbound Network Connections from Suspicious Processes
+## Query 3.7 - Outbound Network Connections from Suspicious Processes
 
 After finding a suspicious process, pivot to network activity. Did it reach out to an external IP? That is your C2 or exfiltration confirmation.
 
@@ -244,7 +244,7 @@ DeviceNetworkEvents
 
 ---
 
-## Query 3.8 — ASR Rule Enforcement Validation
+## Query 3.8 - ASR Rule Enforcement Validation
 
 After deploying ASR rules via Intune, this query confirms they are actually generating block events on the device. A policy showing as applied in Intune is not the same as a policy being enforced on the endpoint.
 
@@ -263,7 +263,7 @@ DeviceEvents
 | sort by TimeGenerated desc
 ```
 
-**Note from the lab:** ASR block events did not appear until after a device reboot following the Intune policy sync. If you deploy ASR rules and see no block events after simulating the relevant techniques, check whether the device has completed a full policy cycle — sync and reboot are both required before enforcement becomes visible in telemetry.
+**Note from the lab:** ASR block events did not appear until after a device reboot following the Intune policy sync. If you deploy ASR rules and see no block events after simulating the relevant techniques, check whether the device has completed a full policy cycle sync, and a reboot is required before enforcement becomes visible in telemetry.
 
 ---
 
