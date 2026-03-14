@@ -32,7 +32,7 @@ Before writing any detections, I validated both data quality and query performan
 - Optimised baseline queries using time filters and aggregation
 - Reduced authentication query runtime from ~18 seconds to under 2 seconds on a 7-day lookback
 
-This groundwork matters. Fast, reliable baseline queries are the foundation that every subsequent investigation depends on.
+This groundwork matters. Fast, reliable baseline queries are the foundation for every subsequent investigation.
 
 ---
 
@@ -40,7 +40,7 @@ This groundwork matters. Fast, reliable baseline queries are the foundation that
 
 ![Sentinel Workspace](../../screenshots/01-sentinel-workspace.png)
 
-2 connectors active (2/2 healthy). 13 security recommendations. 0 automation rules — intentional at this stage. I wanted to understand the alert patterns manually before codifying any automated response.
+2 connectors active (2/2 healthy). 13 security recommendations. 0 automation rules, intentional at this stage. I wanted to understand the alert patterns manually before codifying any automated response.
 
 ### First Signal: EventID 4625 Volume
 
@@ -60,7 +60,7 @@ SecurityEvent_CL
 
 ![Take 10](../../screenshots/03-take10-events.png)
 
-The `take 10` query is the first thing I run on any unfamiliar table — confirms the schema, checks data is flowing, and surfaces any obvious structural issues before writing anything targeted.
+The `take 10` query is the first thing I run on any unfamiliar table. It confirms the schema, checks that data is flowing, and surfaces any obvious structural issues before writing anything targeted.
 
 ### Authentication Baseline
 
@@ -75,7 +75,7 @@ SecurityEvent_CL
 ![Failed Logon Counts](../../screenshots/04-failed-logon-counts.png)
 ![Failed Logon Chart](../../screenshots/05-failed-logon-chart.png)
 
-`\ADMINISTRATOR` was the primary target at 10,255 failed attempts — the default Windows local admin account name, which automated scanners try first. Case variations (`\admin`, `\administrator`, `\ADMIN`) were targeted separately, as automated tools test multiple formats. One interesting entry: `Tamarindo@tamacc\Administrator` at 373 attempts, which looked like an external domain account — I flagged it for investigation in the later cross-domain phase.
+`\ADMINISTRATOR` was the primary target, with 10,255 failed attempts; it's the default Windows local admin account name that automated scanners try first. Case variations (`\admin`, `\administrator`, `\ADMIN`) were targeted separately, as automated tools test multiple formats. One interesting entry: `Tamarindo@tamacc\Administrator` at 373 attempts, which looked like an external domain account. I flagged it for investigation in the later cross-domain phase.
 
 ---
 
@@ -90,7 +90,7 @@ SecurityEvent_CL
 
 ## Reflections
 
-The most surprising thing was how quickly the VM generated meaningful signal. Automated scanners found and began probing the test VM's admin accounts within hours of deployment. That made the authentication baseline work feel immediately real rather than academic.
+The most surprising thing was how quickly the VM generated a meaningful signal. Automated scanners found and began probing the test VM's admin accounts within hours of deployment. That made the authentication baseline work feel immediately real rather than academic.
 
 If I were extending this further, I would prioritise getting network flow data alongside authentication logs — failed logons without network context leaves the source and destination picture incomplete.
 
