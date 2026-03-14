@@ -1,4 +1,4 @@
-# Phase 1 — Authentication Baseline
+# Phase 1 - Authentication Baseline
 
 **Lab phase:** SOC Foundation  
 **SIEM:** Microsoft Sentinel  
@@ -9,7 +9,7 @@ These are the first queries I ran after setting up Sentinel and connecting the l
 
 ---
 
-## Query 1.1 — Schema Check
+## Query 1.1 - Schema Check
 
 Run this first on any unfamiliar table. It shows what columns exist and gives you a feel for the data before committing to any filters.
 
@@ -22,9 +22,9 @@ SecurityEvent_CL
 
 ---
 
-## Query 1.2 — EventID Distribution
+## Query 1.2 - EventID Distribution
 
-What types of events are actually being generated? Run this before writing any detection — it tells you where the volume is and where to focus first.
+What types of events are actually being generated? Run this before writing any detection; it tells you where the volume is and where to focus first.
 
 ```kql
 SecurityEvent_CL
@@ -47,9 +47,9 @@ SecurityEvent_CL
 
 ---
 
-## Query 1.3 — Failed Logon Triage
+## Query 1.3 - Failed Logon Triage
 
-Now that I know where the volume is, focus on it. Who is being targeted and how many times?
+Now that I know where the volume is, focus on it, Who is being targeted, and how many times?
 
 ```kql
 SecurityEvent_CL
@@ -61,13 +61,13 @@ SecurityEvent_CL
 
 **What this revealed:**
 
-- `\ADMINISTRATOR` — 10,255 attempts. This is the default local admin account name that every automated scanner tries first. Being hammered within hours of VM deployment confirmed the device was internet-facing and actively probed.
-- `\admin` (1,989) and `\administrator` (1,864) — case variations of the same account. Automated tools test multiple formats in a single spray.
-- `Tamarindo@tamacc\Administrator` — 373 attempts from an external domain account I hadn't configured. Worth flagging for further investigation.
+- `\ADMINISTRATOR` - 10,255 attempts. This is the default local admin account name that every automated scanner tries first. Being hammered within hours of VM deployment confirmed the device was internet-facing and actively probed.
+- `\admin` (1,989) and `\administrator` (1,864) - case variations of the same account. Automated tools test multiple formats in a single spray.
+- `Tamarindo@tamacc\Administrator` - 373 attempts from an external domain account I hadn't configured. Worth flagging for further investigation.
 
 ---
 
-## Query 1.4 — Failed Logon Timeline
+## Query 1.4 - Failed Logon Timeline
 
 After identifying the volume, understand the timing. Is this sustained automated scanning or a deliberate burst?
 
@@ -87,7 +87,7 @@ SecurityEvent_CL
 
 ---
 
-## Query 1.5 — Top 4 Targeted Accounts (Dashboard Visualisation)
+## Query 1.5 - Top 4 Targeted Accounts (Dashboard Visualisation)
 
 The query behind the Sentinel workbook bar chart. Limited to 4 accounts to keep the visualisation readable.
 
@@ -113,7 +113,7 @@ SecurityEvent_CL
 
 ---
 
-## Query 1.6 — Successful Logon After Failure
+## Query 1.6 - Successful Logon After Failure
 
 The 18,163 failed logons only matter if one of them succeeded. This is the pivot that determines whether the spray was noise or a confirmed compromise.
 
@@ -134,7 +134,7 @@ SecurityEvent_CL
 
 If this returns results, cross-reference the success timestamp against the failure timestamps. A successful logon that follows a run of failures from the same source is a confirmed compromise signal — escalate immediately and pivot to identity logs.
 
-**In this lab:** No confirmed successes were found from the spray activity. The query returned no results, confirming the brute force was opportunistic scanning rather than a targeted attack that succeeded.
+**In this lab:** No confirmed successes were found from the spray activity. The query returned no results, confirming that the brute force was opportunistic scanning rather than a targeted attack that succeeded.
 
 ---
 
