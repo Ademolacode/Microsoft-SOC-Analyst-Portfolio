@@ -1,4 +1,4 @@
-# Phase 4 — Identity, Conditional Access and Cross-Domain Correlation
+# Phase 4 - Identity, Conditional Access and Cross-Domain Correlation
 
 **Lab phase:** Identity and Capstone Investigation  
 **Tools:** Microsoft Entra ID, Microsoft Sentinel, Defender XDR  
@@ -13,7 +13,7 @@ The identity domain is the connective tissue between email and endpoint. A phish
 
 ## Query 4.1 — Risky Sign-In Triage
 
-Start here when investigating a potential credential compromise. Entra ID's Identity Protection flags anomalous sign-ins automatically — this query surfaces them for manual review.
+Start here when investigating a potential credential compromise. Entra ID's Identity Protection flags anomalous sign-ins automatically, and this query surfaces them for manual review.
 
 ```kql
 SignInLogs
@@ -36,7 +36,7 @@ SignInLogs
 
 ---
 
-## Query 4.2 — Full Sign-In History for a Specific Account
+## Query 4.2 - Full Sign-In History for a Specific Account
 
 After identifying a potentially compromised account, pull their complete recent sign-in history to understand the full authentication picture.
 
@@ -58,13 +58,13 @@ SignInLogs
 | sort by TimeGenerated asc
 ```
 
-**What I found in the lab:** David Book's sign-ins showed `ConditionalAccessStatus = "Failure"` with error code 53003 after the CA policy was applied — meaning the policy was blocking access at that point. But earlier sign-ins showed `NotApplied` — the account had been accessible without the policy for a window of time before it was configured.
+**What I found in the lab:** David Book's sign-ins showed `ConditionalAccessStatus = "Failure"` with error code 53003 after the CA policy was applied — meaning the policy was blocking access at that point. But earlier sign-ins showed `NotApplied`, the account had been accessible without the policy for a window of time before it was configured.
 
 ---
 
-## Query 4.3 — Conditional Access Block Events (Error 53003)
+## Query 4.3 - Conditional Access Block Events (Error 53003)
 
-This confirms the CA policy fired. It also confirms that authentication *succeeded* before the policy blocked access — which means the credentials were valid and the account was compromised, even if further access was ultimately denied.
+This confirms the CA policy fired. It also confirms that authentication *succeeded* before the policy blocked access, which means the credentials were valid and the account was compromised, even if further access was ultimately denied.
 
 ```kql
 SignInLogs
@@ -84,11 +84,11 @@ SignInLogs
 | sort by TimeGenerated desc
 ```
 
-**Key insight:** Error 53003 means authentication succeeded but CA policy blocked access. The credentials were valid — the attacker had the password. CA policy was the only line of defence at that point. This reinforces why MFA should be the first control deployed, not a later addition. CA policy blocking after credential theft is reactive. MFA makes the credentials useless in the first place.
+**Key insight:** Error 53003 means authentication succeeded but CA policy blocked access. The credentials were valid, the attacker had the password. CA policy was the only line of defence at that point. This reinforces why MFA should be the first control deployed, not a later addition. CA policy blocking after credential theft is reactive. MFA makes the credentials useless in the first place.
 
 ---
 
-## Query 4.4 — Password Spray Pattern Detection
+## Query 4.4 - Password Spray Pattern Detection
 
 Many failed logons across many accounts from one source IP in a short window is the spray signature. This is what was generating the 18,163 EventID 4625 events observed in Phase 1.
 
@@ -126,7 +126,7 @@ SignInLogs
 
 ---
 
-## Query 4.5 — Spray to Confirmed Compromise (3-Stage Chain)
+## Query 4.5 - Spray to Confirmed Compromise (3-Stage Chain)
 
 Stage 1 identifies the spray. Stage 2 finds whether any attempt succeeded. Stage 3 confirms whether the compromised account then did anything suspicious on an endpoint. This is the query that converts 18,163 authentication events into one confirmed incident.
 
@@ -193,7 +193,7 @@ CompromisedAccounts
 
 ---
 
-## Query 4.6 — Post-Authentication Cloud Activity
+## Query 4.6 - Post-Authentication Cloud Activity
 
 After confirming a compromised sign-in, check what the account actually did in Microsoft 365. File downloads and inbox rule creation are the two most common immediate post-compromise actions.
 
@@ -225,7 +225,7 @@ CloudAppEvents
 
 ---
 
-## Query 4.7 — Living-off-the-Land Commands with Authentication Risk Context
+## Query 4.7 - Living-off-the-Land Commands with Authentication Risk Context
 
 This is the most powerful cross-domain detection in the lab and the one that directly addresses Incident 24.
 
@@ -288,7 +288,7 @@ DeviceProcessEvents
 | sort by TimeGenerated asc
 ```
 
-**Why this matters:** Run `DeviceProcessEvents` alone on the same LOLBAS command list and you get hundreds of rows — all legitimate admin activity mixed with attacker activity, with no way to distinguish them. This query returns only commands run by accounts with anomalous recent authentication. In the Incident 24 investigation, that narrowed hundreds of process events down to a handful of confirmed high-risk actions.
+**Why this matters:** Run `DeviceProcessEvents` alone on the same LOLBAS command list, and you get hundreds of rows — all legitimate admin activity mixed with attacker activity, with no way to distinguish them. This query returns only commands run by accounts with anomalous recent authentication. In the Incident 24 investigation, that narrowed hundreds of process events down to a handful of confirmed high-risk actions.
 
 This is the detection that cross-domain correlation uniquely enables. It cannot be replicated from endpoint telemetry alone.
 
