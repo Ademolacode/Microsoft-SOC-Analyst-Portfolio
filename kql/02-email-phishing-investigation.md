@@ -1,4 +1,4 @@
-# Phase 2 — Email Security and Phishing Investigation
+# Phase 2 - Email Security and Phishing Investigation
 
 **Lab phase:** Email Security  
 **Tool:** Microsoft Defender for Office 365  
@@ -7,11 +7,11 @@
 
 These queries were built to investigate the phishing simulation where David Book received a spoofed file-sharing email from `officence[.]com`.
 
-The core challenge with phishing investigation: the email domain can tell you a message was delivered and a URL was clicked, but its visibility ends the moment the user leaves the inbox. For everything that happens after — credential use, endpoint activity — you need the identity domain. Query 2.6 at the end of this file makes that connection.
+The core challenge with phishing investigation: the email domain can tell you a message was delivered and a URL was clicked, but its visibility ends the moment the user leaves the inbox. For everything that happens after credential use, endpoint activity, you need the identity domain. Query 2.6 at the end of this file makes that connection.
 
 ---
 
-## Query 2.1 — Email Delivery to a Target User
+## Query 2.1 - Email Delivery to a Target User
 
 Starting point for any phishing investigation. Find the message first, then work outward.
 
@@ -37,7 +37,7 @@ EmailEvents
 
 ---
 
-## Query 2.2 — Sender Domain Investigation
+## Query 2.2 - Sender Domain Investigation
 
 Once you have a suspicious sender domain, check how many messages came from it and who else received them.
 
@@ -57,7 +57,7 @@ EmailEvents
 
 ---
 
-## Query 2.3 — URLs Embedded in Suspicious Emails
+## Query 2.3 - URLs Embedded in Suspicious Emails
 
 After identifying the phishing message, extract the URLs it contained. These become your IOCs for threat intelligence lookups.
 
@@ -86,7 +86,7 @@ EmailUrlInfo
 
 ## Query 2.4 — URL Click Events (Did the User Click?)
 
-This is the most important email query. `ClickAllowed` means the user actually followed the link — this event is what triggers the cross-domain pivot to identity logs.
+This is the most important email query. `ClickAllowed` means the user actually followed the link; this event is what triggers the cross-domain pivot to identity logs.
 
 ```kql
 UrlClickEvents
@@ -107,11 +107,11 @@ UrlClickEvents
 
 David Book clicked at T+6 minutes after delivery. `ActionType` was `ClickAllowed` because `officence[.]com` was not yet in the threat intelligence feed at delivery time. `IsClickedThrough = true` confirmed he navigated to the page.
 
-This `UrlClickEvents` entry is the entity that links the email investigation to the identity investigation. `RecipientEmailAddress` is the join key — it matches `UserPrincipalName` in `SignInLogs`.
+This `UrlClickEvents` entry is the entity that links the email investigation to the identity investigation. `RecipientEmailAddress` is the join key; it matches `UserPrincipalName` in `SignInLogs`.
 
 ---
 
-## Query 2.5 — Campaign Scope Check
+## Query 2.5 - Campaign Scope Check
 
 After confirming one victim, always check whether others received the same email. Phishing campaigns rarely target a single mailbox.
 
@@ -133,9 +133,9 @@ EmailEvents
 
 ---
 
-## Query 2.6 — Cross-Domain: Phishing Click to Authentication Anomaly
+## Query 2.6 - Cross-Domain: Phishing Click to Authentication Anomaly
 
-This is the query that closes the detection gap. The email domain sees the click. The identity domain sees the sign-in. Neither is individually actionable. Together they confirm credential theft.
+This is the query that closes the detection gap. The email domain sees the click. The identity domain sees the sign-in. Neither is individually actionable, and they confirm credential theft.
 
 ```kql
 // Step 1: Capture the phishing click event
