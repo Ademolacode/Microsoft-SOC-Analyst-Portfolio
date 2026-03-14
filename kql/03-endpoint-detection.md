@@ -31,7 +31,7 @@ DeviceInfo
 | take 5
 ```
 
-**What I found:** The device already had a Medium risk classification when I checked it — 2 active alerts and 1 incident — before I had deliberately run any attack simulations. This was expected because the device had been generating authentication telemetry in earlier phases that MDE had already classified as suspicious. Rather than dismissing this, I used it as a first investigation exercise and reviewed the device timeline immediately.
+**What I found:** The device already had a Medium risk classification when I checked it, 2 active alerts, and 1 incident before I had deliberately run any attack simulations. This was expected because the device had been generating authentication telemetry in earlier phases that MDE had already classified as suspicious. Rather than dismissing this, I used it as a first investigation exercise and reviewed the device timeline immediately.
 
 ---
 
