@@ -1,4 +1,4 @@
-## Mini Project 1 — SOC Foundation and Lab Blueprint
+## Mini Project 1 - SOC Foundation and Lab Blueprint
 
 **Focus:** SIEM Deployment, Data Ingestion, and Operational Visibility  
 **Tools:** Microsoft Sentinel · Azure Monitor · On-Premises VM · KQL  
