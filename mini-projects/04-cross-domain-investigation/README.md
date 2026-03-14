@@ -1,4 +1,4 @@
-## Mini Project 4 — Cross-Domain Incident Investigation (Capstone)
+## Mini Project 4 - Cross-Domain Incident Investigation (Capstone)
 
 **Focus:** End-to-End Attack Reconstruction Across Email, Identity, and Endpoint  
 **Tools:** Microsoft Sentinel · Defender XDR · Entra ID · KQL  
