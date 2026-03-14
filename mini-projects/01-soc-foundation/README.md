@@ -1,87 +1,106 @@
-## 🏗️ Mini Project #1: SOC Foundation and Lab Blueprint.
+## Mini Project 1 — SOC Foundation and Lab Blueprint
 
-**Focus Area:** SIEM Deployment, Data Ingestion, and Operational Visibility.
-
-**Tools Used:** :Microsoft Sentinel, Azure Monitor, On-Prem Virtual Machine, KQL.
+**Focus:** SIEM Deployment, Data Ingestion, and Operational Visibility  
+**Tools:** Microsoft Sentinel · Azure Monitor · On-Premises VM · KQL  
+**Days:** 1–9
 
 ---
 
-## 🎯 Objective
+## Objective
 
 Deploy Microsoft Sentinel, establish log ingestion from a test VM, and create dashboards for authentication monitoring.
 
-This project focuses on making security data structured, reliable, and investigation-ready rather than simply available.
+The emphasis here was on making the data **investigation-ready, not just available**. A Sentinel workspace with flowing data but unvalidated connectors or slow queries is not useful under real investigation pressure.
 
 ---
 
-## 🧠 Skills and Concepts Demonstrated
+## Work Performed
 
-- Visibility requires deliberate configuration rather than default settings
-- Data connectors must be validated before detections can be trusted
-- Consistent naming and structure reduce investigation friction
-- Dashboards provide baseline context and trends, not alerts
+### Workspace Configuration
 
----
-
-## 🛠️ Tasks Performed
-
-- Deployed and configured a Microsoft Sentinel workspace
-- Connected authentication-related log sources and validated ingestion
+- Deployed Sentinel workspace and validated authentication telemetry ingestion
+- Connected authentication-related log sources and confirmed event consistency
 - Developed KQL queries to identify failed authentication patterns
-- Built dashboards to baseline authentication behavior
-- Bookmarked notable events to support future investigations
+- Built dashboards for authentication baseline and trend visibility
+- Bookmarked notable events to support later investigations
 
----
+### Technical Validation
 
-## 📊 Concrete Outcomes
-
-- Created **2 Sentinel dashboards** focused on authentication visibility
-- Wrote **4 KQL queries** targeting failed logons and suspicious patterns
-- Validated ingestion from **one primary authentication log source**
-- Documented the SOC lab architecture and data flow as a blueprint
-
----
-
-## 🔎 Technical Validation 
-
-To ensure the environment was investigation-ready, I validated both **data quality and query performance**:
+Before writing any detections, I validated both data quality and query performance:
 
 - Confirmed authentication events were consistently ingested and time-aligned
-- Optimized baseline queries using time filters and aggregation
-- Reduced authentication query runtime from **~18 seconds to under 2 seconds** on a 7-day lookback
+- Optimised baseline queries using time filters and aggregation
+- Reduced authentication query runtime from ~18 seconds to under 2 seconds on a 7-day lookback
 
-This ensured dashboards and investigations remained responsive as data volume increased.
-
----
-
-## 📸 Evidence and Artifacts
-
-Artifacts included in this project:
-- Sentinel workspace overview
-- Authentication baseline dashboard
-- KQL query execution with results
-
-Screenshots are stored in the `screenshots/` directory and referenced where applicable.
+This groundwork matters. Fast, reliable baseline queries are the foundation that every subsequent investigation depends on.
 
 ---
 
-## 📂 Project Structure
+## What the Data Showed
+
+![Sentinel Workspace](../../screenshots/01-sentinel-workspace.png)
+
+2 connectors active (2/2 healthy). 13 security recommendations. 0 automation rules — intentional at this stage. I wanted to understand the alert patterns manually before codifying any automated response.
+
+### First Signal: EventID 4625 Volume
+
+```kql
+SecurityEvent_CL
+| summarize RandomCount = count() by EventID_s
+```
+
+![EventID Summary](../../screenshots/02-eventid-summary.png)
+
+EventID 4625 — failed logon — appeared **18,163 times in 24 hours**. This is simulated brute-force activity from the lab environment, but the volume is also realistic for any Windows machine with a default admin account exposed to the internet. Automated scanners find and probe these accounts within hours of deployment.
+
+```kql
+SecurityEvent_CL
+| take 10
+```
+
+![Take 10](../../screenshots/03-take10-events.png)
+
+The `take 10` query is the first thing I run on any unfamiliar table — confirms the schema, checks data is flowing, and surfaces any obvious structural issues before writing anything targeted.
+
+### Authentication Baseline
+
+```kql
+SecurityEvent_CL
+| where EventID_s == "4625"
+| summarize Count = count() by Account_s
+| sort by Count desc
+| take 10
+```
+
+![Failed Logon Counts](../../screenshots/04-failed-logon-counts.png)
+![Failed Logon Chart](../../screenshots/05-failed-logon-chart.png)
+
+`\ADMINISTRATOR` was the primary target at 10,255 failed attempts — the default Windows local admin account name, which automated scanners try first. Case variations (`\admin`, `\administrator`, `\ADMIN`) were targeted separately, as automated tools test multiple formats. One interesting entry: `Tamarindo@tamacc\Administrator` at 373 attempts, which looked like an external domain account — I flagged it for investigation in the later cross-domain phase.
+
+---
+
+## Key Takeaways
+
+- Visibility requires deliberate configuration, not just default setup
+- Connector validation and query optimisation are unglamorous but critical
+- Authentication volume alone is not a detection — it is the baseline against which anomalies are measured
+- Consistent naming and data structure reduce friction during real investigations
+
+---
+
+## Reflections
+
+The most surprising thing was how quickly the VM generated meaningful signal. Automated scanners found and began probing the test VM's admin accounts within hours of deployment. That made the authentication baseline work feel immediately real rather than academic.
+
+If I were extending this further, I would prioritise getting network flow data alongside authentication logs — failed logons without network context leaves the source and destination picture incomplete.
+
+---
+
+## Project Structure
 
 ```text
 01-soc-foundation/
-├── README.md
-├── kql/
-├── dashboards/
-├── screenshots/
-└── notes.md
+└── README.md
 ```
 
-## 🚧 Reflection and Improvements
-
-If extended further, this project could be improved by:
-
-Expanding detections beyond authentication-focused events
-
-Establishing longer baseline periods to better define normal behavior
-
-Enriching authentication data with user role and geographic context
+*Screenshots referenced above are in the root `screenshots/` directory.*
