@@ -1,6 +1,6 @@
 # KQL Detection and Investigation Queries
 
-All queries used during the MyDFIR 30-Day Microsoft SOC Analyst Challenge. Written in order of the investigation phases and built to reflect exactly what was run in the lab — not templates, but documented investigations.
+All queries used during the MyDFIR 30-Day Microsoft SOC Analyst Challenge. Written in order of the investigation phases and built to reflect exactly what was run in the lab, not templates, but documented investigations.
 
 Each file is a markdown document with queries in `kql` code blocks. GitHub renders these with full syntax highlighting.
 
@@ -46,7 +46,7 @@ Without these joins, each domain produces ambiguous signals. With them, an isola
 >
 > Joining those same results to `SignInLogs` and filtering to accounts with recent anomalous authentication reduces hundreds of rows to a handful of confirmed high-risk actions.
 >
-> That reduction is only possible with cross-domain correlation. It is the core finding this query set was built to demonstrate.
+> That reduction is only possible with cross-domain correlation. It is the core finding that this query set was built to demonstrate.
 
 ---
 
