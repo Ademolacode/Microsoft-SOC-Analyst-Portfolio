@@ -20,7 +20,7 @@ By Day 24, Defender XDR had been correlating signals from all three prior phases
 
 ![Incident 24 — Attack Chain](../../screenshots/diagram-incident24.png)
 
-That correlation is the point. Incident 24 — "Hands-on Keyboard Attack" — is a Defender XDR classification that requires evidence of interactive attacker behaviour across multiple stages. No single domain's data would have produced that classification. The email domain saw a suspicious click. The identity domain saw a risky sign-in. The endpoint domain saw suspicious process execution. Together they form a complete attack story.
+That correlation is the point. Incident 24 — "Hands-on Keyboard Attack" — is a Defender XDR classification that requires evidence of interactive attacker behaviour across multiple stages. No single domain's data would have produced that classification. The email domain saw a suspicious click, the identity domain saw a risky sign-in, then the endpoint domain saw suspicious process execution, and they form a complete attack story.
 
 ---
 
@@ -33,7 +33,7 @@ Before getting into the incident itself, Days 24–25 covered the identity and C
 ![Entra ID Admin](../../screenshots/14-ca-policy-config.png)
 ![Security Defaults](../../screenshots/16-security-defaults.png)
 
-Security defaults were enabled in the Entra ID tenant, which enforces baseline MFA for admin accounts. The Microsoft documentation shown in the screenshot makes the case plainly: 99.9% of account compromise stops with MFA. This is not a contested claim in the security industry.
+Security defaults were enabled in the Entra ID tenant, which enforces baseline MFA for admin accounts. The Microsoft documentation shown in the screenshot makes the case plain: 99.9% of account compromise stops with MFA. This is not a contested claim in the security industry.
 
 The reason this is relevant: **David Book's account did not have MFA enabled**.
 
@@ -46,13 +46,13 @@ Security defaults apply MFA to admin accounts and to users when they sign in fro
 The sign-in log entry shows error code 53003 — "Access has been blocked by Conditional Access policies." For David Book, the CA policy eventually blocked further access. But look at what that entry also shows: `Status: Failure`. The authentication itself was **successful**. Valid credentials were used. The CA policy was the last line of defence, and it held — but only after the attack had already progressed significantly.
 
 The sequence that matters:
-1. Phishing delivered — email domain
-2. User clicks — email domain visibility ends
-3. Credentials used to authenticate — identity domain, authentication succeeds
-4. CA policy blocks further access — identity domain, too late for some activity
-5. Endpoint activity had already occurred — endpoint domain
+1. Phishing delivered - email domain
+2. User clicks - email domain visibility ends
+3. Credentials used to authenticate - identity domain, authentication succeeds
+4. CA policy blocks further access - identity domain, too late for some activity
+5. Endpoint activity had already occurred - endpoint domain
 
-Without CA policy step, the attacker had full access. With it, they were eventually blocked. Neither outcome is as good as MFA preventing step 3 from succeeding in the first place.
+Without CA policy step, the attacker had full access. With it, they were eventually blocked, and neither outcome is as good as MFA preventing step 3 from succeeding in the first place.
 
 ---
 
@@ -62,11 +62,11 @@ Without CA policy step, the attacker had full access. With it, they were eventua
 
 Defender XDR classified this as a hands-on keyboard attack with HIGH severity, tagging it with Ransomware, Critical Asset, and Lateral Movement. 58 alerts. 101 activities. Two assets affected: David Book's user account and the `mydfir` device.
 
-The `CONTAINED` badge on David Book's account shows that Defender XDR triggered automatic attack disruption — sessions were revoked and access was restricted without requiring manual analyst action. That automation worked correctly.
+The `CONTAINED` badge on David Book's account shows that Defender XDR triggered automatic attack disruption, sessions were revoked and access was restricted without requiring manual analyst action. That automation worked correctly.
 
 **What the attack story showed:**
 
-The attack chain ran from the initial phishing delivery through to ransomware-classified behaviour in under two hours. The speed is worth noting. Attack timelines in real incidents often compress this way — the window between credential theft and significant impact is measured in minutes to hours, not days.
+The attack chain ran from the initial phishing delivery through to ransomware-classified behaviour in under two hours. The speed is worth noting. Attack timelines in real incidents often compress this way; the window between credential theft and significant impact is measured in minutes to hours, not days.
 
 ### Why Cross-Domain Correlation Was the Only Way to See This
 
@@ -76,9 +76,9 @@ The three individual signals that fed Incident 24 were:
 2. A medium-severity Entra ID "sign-in from unfamiliar location" alert
 3. No alert from MDE for the PowerShell activity (it looked like admin behaviour)
 
-No single one of those signals would have produced a high-severity incident response. The identity alert is genuinely ambiguous — users travel, work from home, use VPNs. The email alert is low severity by design. The endpoint activity generated no alert at all.
+No single one of those signals would have produced a high-severity incident response. The identity alert is genuinely ambiguous; users travel, work from home, and use VPNs. The email alert is low severity by design. The endpoint activity generated no alert at all.
 
-Correlation changed all three. The email click provided the mechanism for the authentication anomaly. The authentication anomaly provided the context for the endpoint activity. Together they produced a confirmed, high-confidence incident with a reconstructed timeline.
+Correlation changed all three. The email click provided the mechanism for the authentication anomaly. The authentication anomaly provided the context for the endpoint activity, and they both produced a confirmed, high-confidence incident with a reconstructed timeline.
 
 This is the pattern I keep returning to. It appears in every significant detection scenario in this lab. And it's the pattern that drives the research question in my PhD proposal: can ML-based approaches learn these cross-domain entity relationships automatically, at a scale that exceeds what explicit correlation rules can encode?
 
@@ -102,7 +102,7 @@ All three queries below are in the `kql/` directory with full documentation.
 -- Only surfaces PowerShell commands run by accounts with recent anomalous auth
 ```
 
-The third query is the one that directly addresses the Incident 24 detection gap. If I had run it during the investigation, it would have surfaced the suspicious PowerShell commands that MDE silently logged — because the authentication context from the identity domain provided the risk elevation that made those commands actionable.
+The third query is the one that directly addresses the Incident 24 detection gap. If I had run it during the investigation, it would have surfaced the suspicious PowerShell commands that MDE silently logged because the authentication context from the identity domain provided the risk elevation that made those commands actionable.
 
 ---
 
@@ -130,7 +130,7 @@ The third query is the one that directly addresses the Incident 24 detection gap
 
 **Identity telemetry is the pivot point.** In every scenario, the identity domain was the link between email and endpoint. The email domain generates the initial signal; the identity domain confirms whether credentials were used; the endpoint domain shows what happened next. The identity layer is the connective tissue.
 
-**Attack timelines compress fast.** Phishing to ransomware-classified behaviour in under two hours in a controlled lab. In production, some stages may take longer — but the assumption that there will be time to investigate before impact is wrong.
+**Attack timelines compress fast.** Phishing to ransomware-classified behaviour in under two hours in a controlled lab. In production, some stages may take longer, but the assumption that there will be time to investigate before impact is wrong.
 
 **Report-only CA policies are a real operational risk.** Any CA policy in report-only mode is providing visibility, not protection. If you're seeing risky sign-ins in the logs but not blocking them, you're watching attacks succeed in real time.
 
@@ -138,7 +138,7 @@ The third query is the one that directly addresses the Incident 24 detection gap
 
 ## Improvements Identified
 
-- Automate response using Sentinel playbooks — session revocation and device isolation should not require manual steps
+- Automate response using Sentinel playbooks, session revocation and device isolation should not require manual steps
 - Enrich investigations with threat intelligence feeds for IP and domain reputation
 - Enforce CA policies in block mode before incidents occur, not after
 - Build and test cross-domain correlation rules before running simulations, so detection is validated against unknown data
