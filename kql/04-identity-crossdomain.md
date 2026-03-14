@@ -11,7 +11,7 @@ The identity domain is the connective tissue between email and endpoint. A phish
 
 ---
 
-## Query 4.1 — Risky Sign-In Triage
+## Query 4.1 - Risky Sign-In Triage
 
 Start here when investigating a potential credential compromise. Entra ID's Identity Protection flags anomalous sign-ins automatically, and this query surfaces them for manual review.
 
@@ -58,7 +58,7 @@ SignInLogs
 | sort by TimeGenerated asc
 ```
 
-**What I found in the lab:** David Book's sign-ins showed `ConditionalAccessStatus = "Failure"` with error code 53003 after the CA policy was applied — meaning the policy was blocking access at that point. But earlier sign-ins showed `NotApplied`, the account had been accessible without the policy for a window of time before it was configured.
+**What I found in the lab:** David Book's sign-ins showed `ConditionalAccessStatus = "Failure"` with error code 53003 after the CA policy was applied, meaning the policy was blocking access at that point. But earlier sign-ins showed `NotApplied`, the account had been accessible without the policy for a window of time before it was configured.
 
 ---
 
