@@ -267,5 +267,5 @@ microsoft-soc-analyst-portfolio/
 
 ---
 
-*MyDFIR 30-Day Microsoft SOC Analyst Challenge · Completed Jan–Feb 2025*  
-*Ademola Oniyinde · Security Operations Analyst · demola.adeayo@gmail.com*
+*MyDFIR 30-Day Microsoft SOC Analyst Challenge · Completed Jan–Feb 2026*  
+*Ademola Oniyinde · demola.adeayo@gmail.com*
